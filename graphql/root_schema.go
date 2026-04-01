@@ -225,18 +225,14 @@ func SchemaString() (string, error) {
 }
 
 func Schema() (*graphql.Schema, error) {
-    schemaStr, err := SchemaString()
-    if err != nil {
-        return nil, err
-    }
-    // 写入文件，便于查看行号
-    if err := os.WriteFile("/tmp/full_schema.graphql", []byte(schemaStr), 0644); err == nil {
-        fmt.Fprintln(os.Stderr, "Full schema written to /tmp/full_schema.graphql")
-    }
-    return graphql.MustParseSchema(
-        schemaStr,
-        &resolver{},
-        graphql.UseFieldResolvers(),
-        graphql.Directives(&hasRoleDirective{}),
-    ), nil
+	schema, err := SchemaString()
+	if err != nil {
+		return nil, err
+	}
+	return graphql.MustParseSchema(
+		schema,
+		&resolver{},
+		graphql.UseFieldResolvers(),
+		graphql.Directives(&hasRoleDirective{}),
+	), nil
 }
