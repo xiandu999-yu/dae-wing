@@ -219,18 +219,7 @@ func SchemaString() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		// 临时修复：移除由内部字段（如 mapstructure:"_"）导致的无效行（例如 ": bool"）
-		lines := strings.Split(s, "\n")
-		var filtered []string
-		for _, line := range lines {
-			trimmed := strings.TrimSpace(line)
-			// 如果行以冒号开头（如 ": bool"），则跳过
-			if strings.HasPrefix(trimmed, ":") {
-				continue
-			}
-			filtered = append(filtered, line)
-		}
-		sb.WriteString(strings.Join(filtered, "\n"))
+		sb.WriteString(s)
 	}
 	return strings.TrimSpace(sb.String()), nil
 }
