@@ -211,7 +211,6 @@ func (*resolver) Mutation() *MutationResolver {
 	return &MutationResolver{}
 }
 
-// SchemaString 返回完整的 GraphQL schema 字符串，并在每个片段后添加换行防止粘连
 func SchemaString() (string, error) {
 	var sb strings.Builder
 	sb.WriteString(rootSchema)
@@ -221,7 +220,6 @@ func SchemaString() (string, error) {
 			return "", err
 		}
 		sb.WriteString(s)
-		sb.WriteString("\n") // 添加换行，避免片段与下一段粘连
 	}
 	return strings.TrimSpace(sb.String()), nil
 }
@@ -231,16 +229,6 @@ func Schema() (*graphql.Schema, error) {
 	if err != nil {
 		return nil, err
 	}
-	// 打印第 200-210 行，帮助定位第 205 行的语法错误
-	lines := strings.Split(schema, "\n")
-	fmt.Println("=== GraphQL schema lines 200-210 ===")
-	for i, line := range lines {
-		if i+1 >= 200 && i+1 <= 210 {
-			fmt.Printf("%d: %s\n", i+1, line)
-		}
-	}
-	fmt.Println("=====================================")
-
 	return graphql.MustParseSchema(
 		schema,
 		&resolver{},
