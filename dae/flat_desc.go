@@ -39,6 +39,12 @@ func (e *flatDescExporter) exportStruct(namePrefix string, mappingPrefix string,
 	for i := 0; i < t.NumField(); i++ {
 		section := t.Field(i)
 		mapping := section.Tag.Get("mapstructure")
+
+		// 跳过带有 mapstructure:"_" 的内部字段，防止它们被导出到 GraphQL
+		if mapping == "_" {
+			continue
+		}
+
 		// Parse desc.
 		var desc string
 		if descSource != nil {
